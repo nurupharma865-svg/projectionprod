@@ -1,0 +1,13 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /projects/{projectId}/content.json {
+      // Aucun compte : lecture et écriture publiques pour les documents importés.
+      // Limite de taille pour éviter les fichiers excessifs.
+      allow read: if true;
+      allow create, update: if request.resource.size < 20 * 1024 * 1024
+        && request.resource.contentType == 'application/json';
+      allow delete: if true;
+    }
+  }
+}
